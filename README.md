@@ -1,2 +1,3 @@
 # SQNotes
-Java 学习笔记
+[Java](./Notes/Java.md)
+
