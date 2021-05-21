@@ -47,3 +47,11 @@
 
 ## 校招笔试面试
 
+
+
+## 实用技巧
+
+[使用Github 或者 Gitee 用作云笔记存储](./Notes/Github使用.md)
+
+[使用Github 或者 Gitee作为图床工具](./Notes/Github使用.md)
+
