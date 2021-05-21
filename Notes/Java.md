@@ -1,5 +1,3 @@
-[TOC]
-
 ## Java基础
 
 ##### Java、C++ 和 Matlab的区别
