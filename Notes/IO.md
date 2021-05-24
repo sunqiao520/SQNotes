@@ -16,13 +16,19 @@ InputStream/Reader: 所有的输入流的基类，前者是字节输入流，后
 
 OutputStream/Writer: 所有输出流的基类，前者是字节输出流，后者是字符输出流。
 
+#### 字符流与字节流的区别：
+
+- 字节流操作的基本单位为单个字节；字符流操作的基本单位为Unicode码元（大小2字节）
+- 字节流默认不使用缓冲区；字符流使用缓冲区
+- 字节流通常处理二进制数据，实际上它可以处理任意类型的数据，但它不支持直接写入或读取Unicode码元；字符流通常处理文本数据，它支持写入及读取Unicode码元。
+
 - 按操作方式分类：
 
-<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/image-20210420163844146.png" style="zoom:50%;" />
+<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/image-20210420163844146.png" style="zoom: 80%;" />
 
 - 按操作对象分：
 
-<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/clip_image001-1618907878319.jpg" style="zoom:67%;" />
+<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/clip_image001-1618907878319.jpg" style="zoom: 80%;" />
 
 ##### Java中3中常见IO模型
 
