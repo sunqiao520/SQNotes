@@ -1,4 +1,5 @@
 # SQNotes
+
 ## Java基础
 
 [Java基础常见问答](./Notes/Java.md)
@@ -28,6 +29,8 @@
 ## 数据库
 
 [数据库基础](./Notes/数据库.md)
+
+[SQL练习](./Notes/SQL练习.md)
 
 ## JVM
 
