@@ -40,6 +40,14 @@
 
 [Spring](./Notes/Spring知识点总结.md)
 
+[MyBatis](./Notes/MyBatis.md)
+
+[MyBatis-Plus](./Notes/MyBatis-Plus.md)
+
+[Spring Data JPA](./Notes/Spring Data JPA.md)
+
+Shiro
+
 ## 设计模式
 
 [设计模式](./Notes/设计模式.md)
