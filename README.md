@@ -40,13 +40,15 @@
 
 [Spring](./Notes/Spring知识点总结.md)
 
+[SpringBoot自动装配](./Notes/SpringBoot自动装配.md)
+
 [MyBatis](./Notes/MyBatis.md)
 
 [MyBatis-Plus](./Notes/MyBatis-Plus.md)
 
-[Spring Data JPA](./Notes/Spring Data JPA.md)
+[Spring Data JPA](./Notes/SpringDataJPA.md)
 
-Shiro
+[Shiro](./Notes/Shiro.md)
 
 ## 设计模式
 
