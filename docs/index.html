@@ -14,7 +14,12 @@
     window.$docsify = {
       name: '',
       repo: '',
-      loadSidebar: true,
+      loadSidebar: 'sidebar.md',
+      subMaxLevel: 6,
+      alias: {
+        '/.*/sidebar.md': '/sidebar.md',
+        '/.*/navbar.md': '/navbar.md'
+      },
       // coverpage: true
     }
   </script>
