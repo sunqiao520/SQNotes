@@ -2,7 +2,7 @@
 
 ## Java基础
 
-[Java基础常见问答](../Notes/Java.md)
+[Java基础常见问答](Notes/Java.md)
 
 [IO流知识](./Notes/IO.md)
 
