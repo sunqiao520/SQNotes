@@ -4,7 +4,7 @@
 
 [Java基础常见问答](Java)
 
-[IO流知识](./Notes/IO.md)
+[IO流知识](../Notes/IO.md)
 
 [Java多线程](./Notes/Java多线程.md)
 
