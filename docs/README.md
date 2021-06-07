@@ -2,11 +2,7 @@
 
 ## Java基础
 
-<<<<<<< HEAD
 [Java基础常见问答](Java)
-=======
-[Java基础常见问答](../Notes/Java)
->>>>>>> 27ecd325f3d17de9f8aeacf4907e665a8403b882
 
 [IO流知识](../Notes/IO.md)
 
