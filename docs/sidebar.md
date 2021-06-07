@@ -1,2 +1,2 @@
-[java](java)
+- [Java](Java)
 
