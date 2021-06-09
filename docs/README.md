@@ -48,7 +48,11 @@
 
 [Spring Data JPA](Notes/SpringDataJPA.md)
 
+[SpringSecurity](Notes/SpringSecurity)
+
 [Shiro](Notes/Shiro.md)
+
+[SpringCloud](Notes/Spring Cloud)
 
 ## 设计模式
 
@@ -60,7 +64,7 @@
 
 [博客系统学习](Notes/博客系统学习.md)
 
-
+[新蜂商城](Notes/新蜂商城)
 
 ## 校招笔试面试
 
