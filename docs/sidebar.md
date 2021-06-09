@@ -26,8 +26,10 @@
   - [MyBatis](Notes/MyBatis.md)
   - [MyBatis-Plus](Notes/MyBatis-Plus.md)
   - [Spring Data JPA](Notes/SpringDataJPA.md)
+  - [SpringSecurity](Notes/SpringSecurity)
   - [Shiro](Notes/Shiro.md)
-
+  - [SpringCloud](Notes/Spring Cloud)
+  
 - 设计模式
   - [设计模式](Notes/设计模式.md)
 
