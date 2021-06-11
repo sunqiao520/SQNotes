@@ -777,7 +777,7 @@ public class RibbonHandler {
 
 与 Ribbon 一样，Feign 也是由 Netflix 提供的，Feign 是一个声明式、模版化的 Web Service 客户端，它简化了开发者编写 Web 服务客户端的操作，开发者可以通过简单的接口和注解来调用 HTTP API，Spring Cloud Feign，它整合了 Ribbon 和 Hystrix，具有可插拔、基于注解、负载均衡、服务熔断等一系列便捷功能。
 
-相比较于 Ribbon + RestTemplate 的方式，Feign 大大简化了代码的开发，Feign 支持多种注解，包括 Feign 注解、JAX-RS 注解、Spring MVC 注解等，Spring Cloud 对 Feing 进行了优化，整合了 Ribbon 和 Eureka，从而让 Feign 的使用更加方便。
+相比较于 Ribbon + RestTemplate 的方式，Feign 大大简化了代码的开发，Feign 支持多种注解，包括 Feign 注解、JAX-RS 注解、Spring MVC 注解等，Spring Cloud 对 Feign 进行了优化，整合了 Ribbon 和 Eureka，从而让 Feign 的使用更加方便。
 
 - Ribbon 和 Feign 的区别
 
@@ -983,7 +983,7 @@ public interface FeignProviderClient {
 
 5、提供实时的配置修改功能
 
-Hystrix 数据监控需要结合 Spring Boot Actuator 来使用，Actuator 提供了对服务的健康健康、数据统计，可以通过 hystrix.stream 节点获取监控的请求数据，提供了可视化的监控界面。
+Hystrix 数据监控需要结合 Spring Boot Actuator 来使用，Actuator 提供了对服务的健康监控、数据统计，可以通过 hystrix.stream 节点获取监控的请求数据，提供了可视化的监控界面。
 
 - 创建 Maven，pom.xml
 
@@ -1420,7 +1420,7 @@ Spring Cloud Zipkin
 
 Zipkin 是一个可以采集并且跟踪分布式系统中请求数据的组件，让开发者可以更加直观的监控到请求在各个微服务所耗费的时间等，Zipkin：Zipkin Server、Zipkin Client。
 
-####创建 Zipkin Server
+#### 创建 Zipkin Server
 
 - 创建 Maven 工程，pom.xml
 

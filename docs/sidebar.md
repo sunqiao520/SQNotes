@@ -28,7 +28,7 @@
   - [Spring Data JPA](Notes/SpringDataJPA.md)
   - [SpringSecurity](Notes/SpringSecurity)
   - [Shiro](Notes/Shiro.md)
-  - [SpringCloud](Notes/Spring Cloud)
+  - [SpringCloud](Notes/SpringCloud)
   
 - 设计模式
   - [设计模式](Notes/设计模式.md)
@@ -36,6 +36,11 @@
 - 项目
   - [PhoneStoreDemo](Notes/PhoneStoreDemo.md)
   - [博客系统学习](Notes/博客系统学习.md)
+  - [新蜂商城](Notes/新蜂商城)
+  - [外卖订餐系统](Notes/外卖订餐系统)
+
+- Linux
+  - [Linux部署Java应用](Notes/Linux部署Java应用)
 
 - 校招笔试面试
   - [校招笔试面试](Notes/校招笔试面试.md)
