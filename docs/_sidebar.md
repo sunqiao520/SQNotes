@@ -18,7 +18,8 @@
 - 数据库
   - [数据库基础](Notes/数据库.md)
   - [SQL练习](Notes/SQL练习.md)
-
+  - [MySQL高级](Notes/MySQL高级)
+  
 - JVM
   - [深入理解Java虚拟机](Notes/JVM.md)
 
@@ -43,7 +44,8 @@
 
 - Linux
   - [Linux部署Java应用](Notes/Linux部署Java应用)
-
+  - [Docker](Notes/Docker)
+  
 - 校招笔试面试
   - [校招笔试面试](Notes/校招笔试面试.md)
 
