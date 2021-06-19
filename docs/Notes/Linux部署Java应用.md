@@ -2,47 +2,15 @@
 
 服务器 Linux 
 
-阿里云、华为云、腾讯云
-
-安装虚拟机，虚拟机就是在你的电脑中安装一台虚拟的计算机，内存、CPU、硬盘，Linux 安装到虚拟机中。
-
-CentOS7，企业级 Linux 的发行版，完全开源，完全免费。
-
 安装软件：
 
 - 虚拟机 VMware workstation 15
 - CentOS7
 - 安装 Java 环境 JDK 8
-- 安装 MySQL 8
+- 安装 MySQL 8/5.7
 - 安装 Tomcat
 - 安装 Xshell
 - 安装 Xftp
-
-![image-20200502202046738](C:\Users\ningn\AppData\Roaming\Typora\typora-user-images\image-20200502202046738.png)
-
-# 安装 VM
-
-# 安装 Linux 操作系统 CentOS 7
-
-1、解压 CentOS7
-
-2、将解压之后的文件导入 VM，运行即可
-
-3、虚拟机设置
-
-默认的网络配置是桥接模式，直接接入当前的网络环境，如果网络不稳定，IP 会变。
-
-NAT，相当于在 Windows 系统中独立开辟一块新的网络空间，IP 地址固定不变的，无论是否接入外网，都可以访问 CentOS。
-
-![image-20200502203014415](C:\Users\ningn\AppData\Roaming\Typora\typora-user-images\image-20200502203014415.png)
-
-![image-20200502203048521](C:\Users\ningn\AppData\Roaming\Typora\typora-user-images\image-20200502203048521.png)
-
-4、启动虚拟机，用 root 权限登录
-
-用户名：root
-
-密码：123456
 
 Linux 查询 IP 地址
 
@@ -138,10 +106,6 @@ java -jar xxx.jar
 ```
 
 1、将 Spring Boot 应用打包，jar，Maven
-
-![image-20200502213628286](C:\Users\ningn\AppData\Roaming\Typora\typora-user-images\image-20200502213628286.png)
-
-![image-20200502213745177](C:\Users\ningn\AppData\Roaming\Typora\typora-user-images\image-20200502213745177.png)
 
 2、通过命令行启动 jar 即可
 
