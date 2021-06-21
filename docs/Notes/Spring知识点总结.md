@@ -1,13 +1,13 @@
-## Spring
+## 1、Spring
 
-### Spring 框架两大核心机制（IoC、AOP）
+### 1.1、Spring 框架两大核心机制（IoC、AOP）
 
 - IoC（控制反转）/ DI（依赖注入）
 - AOP（面向切面编程）
 
 Spring 是一个企业级开发框架，是软件设计层面的框架，优势在于可以将应用程序进行分层，开发者可以自主选择组件。
 
-### Spring模块
+### 1.2、Spring模块
 
 <img src="https://gitee.com/sun-qiao321/picture/raw/master/images/20210424154051.png" style="zoom: 50%;" />
 
@@ -24,7 +24,15 @@ MVC：Struts2、Spring MVC
 
 ORMapping：Hibernate、MyBatis、Spring Data
 
-### 如何使用 IoC
+### 1.3、Spring IOC 的基本概念
+
+当某个Java对象需要调用另一个Java对象时，在传统的编程模式下，调用者通常采用“new 被调用者”的代码方式来创建对象。这种方式会增加调用者和被调用者之间的耦合性，不利于后期代码的升级和维护。
+
+当Spring框架出现后，对象的实例不再由调用者来创建，而是由Spring容器来创建。Spring容器会负责控制程序之间的关系，而不是由调用者的程序代码直接控制。这样，控制权由调用者转移到Spring容器，控制权发生了反转，这就是Spring的控制反转。
+
+从Spring容器的角度来看，Spring容器负责将被依赖对象赋值给调用者的成员变量，相当于为调用者注入它所依赖的实例，这就是Spring 的依赖注入，主要目的是为了解耦。
+
+### 1.4、如何使用 IoC
 
 - 创建 Maven 工程，pom.xml 添加依赖
 
@@ -105,9 +113,7 @@ Student student = (Student) applicationContext.getBean("student");
 System.out.println(student);
 ```
 
-
-
-### 配置文件
+### 1.5、配置文件
 
 - 通过配置 `bean` 标签来完成对象的管理。
 
@@ -137,7 +143,7 @@ System.out.println(student);
 
   
 
-### IoC 底层原理
+### 1.6、IoC 底层原理
 
 - 读取配置文件，解析 XML。
 - 通过反射机制实例化配置文件中所配置所有的 bean。
@@ -227,7 +233,7 @@ public class ClassPathXmlApplicationContext implements ApplicationContext {
 
 
 
-### 通过运行时类获取 bean
+### 1.7、通过运行时类获取 bean
 
 ```java
 ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
@@ -237,9 +243,7 @@ System.out.println(student);
 
 这种方式存在一个问题，配置文件中一个数据类型的对象只能有一个实例，否则会抛出异常，因为没有唯一的 bean。
 
-
-
-### 通过有参构造创建 bean
+### 1.8、通过有参构造创建 bean
 
 - 在实体类中创建对应的有参构造函数。（需要创建对应的构造方法）
 - 配置文件
@@ -253,8 +257,6 @@ System.out.println(student);
 </bean>
 ```
 
-
-
 ```xml
 <bean id="student3" class="com.southwind.entity.Student">
     <constructor-arg index="0" value="3"></constructor-arg>
@@ -264,9 +266,7 @@ System.out.println(student);
 </bean>
 ```
 
-
-
-### 给 bean 注入集合
+### 1.9、给 bean 注入集合
 
 ```xml
 <bean id="student" class="com.southwind.entity.Student">
@@ -292,9 +292,7 @@ System.out.println(student);
 </bean>
 ```
 
-
-
-### scope 作用域
+### 1.10、scope 作用域
 
 Spring 管理的 bean 是根据 scope 来生成的，表示 bean 的作用域，共4种，默认值是 singleton。
 
@@ -309,9 +307,7 @@ prototype 模式当业务代码获取 IoC 容器中的 bean 时，Spring 才去�
 
 singleton 模式无论业务代码是否获取 IoC 容器中的 bean，Spring 在加载 spring.xml 时就会创建 bean。
 
-
-
-### Spring 的继承
+### 1.11、Spring 的继承
 
 与 Java 的继承不同，Java 是类层面的继承，子类可以继承父类的内部结构信息；Spring 是对象层面的继承，子对象可以继承父对象的属性值。
 
@@ -347,7 +343,7 @@ Spring 的继承关注点在于具体的对象，而不在于类，即不同的�
 
 
 
-### Spring 的依赖
+### 1.12、Spring 的依赖
 
 与继承类似，依赖也是描述 bean 和 bean 之间的一种关系，配置依赖之后，被依赖的 bean 一定先创建，再创建依赖的 bean，A 依赖于 B，先创建 B，再创建 A。
 
@@ -367,7 +363,7 @@ Spring 的继承关注点在于具体的对象，而不在于类，即不同的�
 
 
 
-### Spring 的 p 命名空间
+### 1.13、Spring 的 p 命名空间
 
 p 命名空间是对 IoC / DI 的简化操作，使用 p 命名空间可以更加方便的完成 bean 的配置以及 bean 之间的依赖注入。（主要作用是配置<property>时更方便。
 
@@ -388,9 +384,31 @@ p 命名空间是对 IoC / DI 的简化操作，使用 p 命名空间可以更�
 </beans>
 ```
 
+### 1.14、常用注解
+
+**1、声明Bean 的注解**
+
+@Component
+
+@Repository
+
+@Service
+
+@Controller
+
+**2、注入Bean 的注解**
+
+@Autowired
+
+对类成员变量、方法及构造方法进行标注，完成自动装配工作。默认按照Bean的类型进行装配。
+
+@Resource
+
+与@Autowired 功能一样，默认按照名称来装配注入，与@Qualifier 一起使用。
 
 
-### Spring 的工厂方法
+
+### 1.15、Spring 的工厂方法
 
 IoC 通过工厂模式创建 bean 的方式有两种：
 
@@ -480,7 +498,7 @@ public class InstanceCarFactory {
 
 
 
-### IoC 自动装载（Autowire）
+### 1.16、IoC 自动装载（Autowire）
 
 IoC 负责创建对象，DI 负责完成对象的依赖注入，通过配置 property 标签的 ref 属性来完成，同时 Spring 提供了另外一种更加简便的依赖注入方式：自动装载，不需要手动配置 property，IoC 容器会自动选择 bean 完成注入。
 

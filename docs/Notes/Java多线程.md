@@ -1,5 +1,339 @@
 ## Java多线程
 
+参考资料：http://concurrent.redspider.group/RedSpider.html
+
+## 1、Java多线程的使用
+
+### 1.1、继承 Thread 类
+
+```java
+public class ThreadDemo1 {
+    public static class MyThread extends Thread {
+
+        @Override
+        public void run() {
+            System.out.println("My Thread");
+        }
+        
+    }
+    public static void main(String[] args) {
+        Thread myThread = new MyThread();
+        myThread.start();
+    }
+}
+```
+
+> 调用 start() 方法启动线程，只能调用一次
+
+### 1.2、实现 Runnable 接口
+
+```java
+public class ThreadDemo2 {
+    public static class MyThread implements Runnable {
+        @Override
+        public void run() {
+            System.out.println("MyThread");
+        }
+    }
+    public static void main(String[] args) {
+
+        new Thread(new MyThread()).start();
+
+        // Java 8 函数式编程，可以省略MyThread类
+        new Thread(() -> {
+            System.out.println("Java 8 匿名内部类");
+        }).start();
+        
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+               System.out.println("匿名内部类");
+            }
+        }).start();
+    }  
+}
+```
+
+### 1.3、Thread 类的常用方法
+
+- currentThread()：静态方法，返回对当前正在执行的线程对象的引用；
+- start()：开始执行线程的方法，java虚拟机会调用线程内的run()方法；
+- yield()：yield在英语里有放弃的意思，同样，这里的yield()指的是当前线程愿意让出对当前处理器的占用。这里需要注意的是，就算当前线程调用了yield()方法，程序在调度的时候，也还有可能继续运行这个线程的；
+- sleep()：静态方法，使当前线程睡眠一段时间；
+- join()：使当前线程等待另一个线程执行完毕之后再继续执行，内部调用的是Object类的wait方法实现的；
+
+### 1.4、Callable 接口
+
+Callable 提供有返回值的线程方法
+
+```java
+import java.util.concurrent.*;
+public class CallableDemo1 implements Callable<Integer>{
+
+    @Override
+    public Integer call() throws Exception {
+        Thread.sleep(1000);
+        return 2;
+    }
+    public static void main(String[] args) throws Exception{
+        ExecutorService executor = Executors.newCachedThreadPool();
+        CallableDemo1 callableDemo1 = new CallableDemo1();
+        Future<Integer> result = executor.submit(callableDemo1);
+        System.out.println(result.get());
+    }
+}
+```
+
+## 2、Java 线程的状态
+
+### 2.1、操作系统的线程状态
+
+![](https://gitee.com/sun-qiao321/picture/raw/master/images/20210621210919.png)
+
+### 2.2、Java 线程状态
+
+```java
+public enum State {
+    NEW,
+    RUNNABLE,
+    BLOCKED,
+    WAITING,
+    TIMED_WAITING,
+    TERMINATED;
+}
+```
+
+#### 2.2.1、NEW
+
+只是创建了线程而并没有调用start()方法，此时线程处于NEW状态。
+
+#### 2.2.2、start() 方法
+
+1. 反复调用同一个线程的start()方法是否可行？
+2. 假如一个线程执行完毕（此时处于TERMINATED状态），再次调用这个线程的start()方法是否可行？
+
+观察 start() 方法的源码
+
+```java
+   public synchronized void start() {
+        /**
+         * A zero status value corresponds to state "NEW".
+         */
+        if (threadStatus != 0)
+            throw new IllegalThreadStateException();
+        group.add(this);
+        boolean started = false;
+        try {
+            start0();
+            started = true;
+        } finally {
+            try {
+                if (!started) {
+                    group.threadStartFailed(this);
+                }
+            } catch (Throwable ignore) {
+            }
+        }
+    }
+```
+
+其中threadStatus 的状态为0 时，表示 线程处于NEW 状态，若不为0，直接抛出异常。
+
+> 两个问题的答案都是不可行，在调用一次start()之后，threadStatus的值会改变（threadStatus !=0），此时再次调用start()方法会抛出IllegalThreadStateException异常。
+>
+> 比如，threadStatus为2代表当前线程状态为TERMINATED。
+
+#### 2.2.3、RUNNABLE
+
+表示当前线程正在运行中。处于RUNNABLE状态的线程在Java虚拟机中运行，也有可能在等待CPU分配资源。
+
+> Java线程的**RUNNABLE**状态包括了传统操作系统线程的**ready**和**running**两个状态的。
+
+#### 2.2.4、BLOCKED
+
+阻塞状态。处于BLOCKED状态的线程正等待锁的释放以进入同步区。
+
+#### 2.2.5、WAITING
+
+等待状态。处于等待状态的线程变成RUNNABLE状态需要其他线程唤醒。
+
+调用如下3个方法会使线程进入等待状态：
+
+- Object.wait()：使当前线程处于等待状态直到另一个线程唤醒它；
+- Thread.join()：等待线程执行完毕，底层调用的是Object实例的wait方法；
+- LockSupport.park()：除非获得调用许可，否则禁用当前线程进行线程调度。
+
+#### 2.2.6、TIMED_WAITING
+
+超时等待状态。线程等待一个具体的时间，时间到后会被自动唤醒。
+
+调用如下方法会使线程进入超时等待状态：
+
+- Thread.sleep(long millis)：使当前线程睡眠指定时间；
+- Object.wait(long timeout)：线程休眠指定时间，等待期间可以通过notify()/notifyAll()唤醒；
+- Thread.join(long millis)：等待当前线程最多执行millis毫秒，如果millis为0，则会一直执行；
+- LockSupport.parkNanos(long nanos)： 除非获得调用许可，否则禁用当前线程进行线程调度指定时间；
+- LockSupport.parkUntil(long deadline)：同上，也是禁止线程进行调度指定时间；
+
+#### 2.2.7、TERMINATED
+
+终止状态。此时线程已执行完毕。
+
+### 2.3、 状态的转换
+
+![](https://gitee.com/sun-qiao321/picture/raw/master/images/20210621212403.png)
+
+## 3、Java 线程间通信
+
+### 3.1、锁与同步
+
+##### 实现A先输出 、B再输出
+
+```java
+public class ObjectLock {
+    private static Object lock = new Object();
+    static class ThreadA implements Runnable{
+        @Override
+        public void run() {
+            synchronized (lock){
+                for(int i = 0;i<100;i++){
+                    System.out.println("Thread A "+i);
+                }
+            }
+        }
+    }
+    static class ThreadB implements Runnable {
+        @Override
+        public void run() {
+            synchronized (lock) {
+                for (int i = 0; i < 100; i++) {
+                    System.out.println("Thread B " + i);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new ThreadA()).start();
+        Thread.sleep(10);
+        new Thread(new ThreadB()).start();
+    }
+}
+
+```
+
+### 3.2、等待/通知机制
+
+##### A和B交替输出
+
+```java
+public class WaitAndNotify {
+    private static Object lock = new Object();
+
+    static class ThreadA implements Runnable {
+        @Override
+        public void run() {
+            synchronized (lock) {
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        System.out.println("ThreadA: " + i);
+                        lock.notify();
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                lock.notify();
+            }
+        }
+    }
+
+    static class ThreadB implements Runnable {
+        @Override
+        public void run() {
+            synchronized (lock) {
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        System.out.println("ThreadB: " + i);
+                        lock.notify();
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                lock.notify();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new ThreadA()).start();
+        Thread.sleep(1000);
+        new Thread(new ThreadB()).start();
+    }
+}
+
+// 输出：
+ThreadA: 0
+ThreadB: 0
+ThreadA: 1
+ThreadB: 1
+ThreadA: 2
+ThreadB: 2
+ThreadA: 3
+ThreadB: 3
+ThreadA: 4
+ThreadB: 4
+```
+
+### 3.3、信号量
+
+##### 实现A和B交替输出
+
+```java
+public class Signal {
+    private static volatile int signal = 0;
+    static class ThreadA implements Runnable{
+        @Override
+        public void run() {
+            while(signal <10){
+                if(signal % 2 == 0) {
+                    System.out.println("threadA: " +signal);
+                    signal++;
+                }
+            }
+        }
+    }
+    static class ThreadB implements Runnable {
+        @Override
+        public void run() {
+            while (signal < 10) {
+                if (signal % 2 == 1) {
+                    System.out.println("threadB: " + signal);
+                    signal = signal + 1;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        new Thread(new ThreadA()).start();
+        Thread.sleep(1000);
+        new Thread(new ThreadB()).start();
+    }
+}
+```
+
+### 3.4、管道
+
+管道是基于“管道流”的通信方式。JDK提供了`PipedWriter`、 `PipedReader`、 `PipedOutputStream`、 `PipedInputStream`。其中，前面两个是基于字符的，后面两个是基于字节流的。
+
+
+
+
+
+### 3.5、锁的概念
+
 ##### 死锁与产生的必要条件
 
 死锁：是指两个或两个以上的进程（或线程）在执行过程中，因争夺资源而造成的一种互相等待的现象，若无外力作用，它们都将无法推进下去。
@@ -50,19 +384,49 @@ sleep()是使线程暂停执行一段时间的方法。wait()也是一种使线�
 
  wait()方法必须放在同步控制方法或者同步语句块中使用，而sleep方法则可以放在任何地方使用。
 
- sleep()方法必须捕获异常，而wait()、notify()、notifyAll()不需要捕获异常。在sleep的过程中，有可能被其他对象调用它的interrupt()，产生InterruptedException异常。
-
 
 
  由于sleep不会释放锁标志，容易导致死锁问题的发生，一般情况下，不推荐使用sleep()方法，而推荐使用wait()方法。
 
-##### Java内存模型JMM
+## 4、Java内存模型JMM
+
+### 4.1、Java 运行时数据区
+
+<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/20210621222523.png" style="zoom: 67%;" />
+
+### 4.2、Java 内存模型 JMM
+
+<img src="https://gitee.com/sun-qiao321/picture/raw/master/images/20210621222725.png" style="zoom:50%;" />
+
+从图中可以看出：
+
+1. 所有的共享变量都存在主内存中。
+
+2. 每个线程都保存了一份该线程使用到的共享变量的副本。
+
+3. 如果线程A与线程B之间要通信的话，必须经历下面2个步骤：
+
+   - 线程A将本地内存A中更新过的共享变量刷新到主内存中去。
+
+   - 线程B到主内存中去读取线程A之前已经更新过的共享变量。
+
+
+
+### 4.3、JMM 和 Java 内存区域划分的区别和联系
+
+- 区别
+
+  两者是不同的概念层次。JMM是抽象的，他是用来描述一组规则，通过这个规则来控制各个变量的访问方式，围绕原子性、有序性、可见性等展开的。而Java运行时内存的划分是具体的，是JVM运行Java程序时，必要的内存划分。
+
+- 联系
+
+  都存在私有数据区域和共享数据区域。一般来说，JMM中的主内存属于共享数据区域，他是包含了堆和方法区；同样，JMM中的本地内存属于私有数据区域，包含了程序计数器、本地方法栈、虚拟机栈。
 
 
 
 
 
-##### [ThreadLocal](https://mp.weixin.qq.com/s/DMj4wY2Z30MylAt9QJ5pUg)
+## [ThreadLocal](https://mp.weixin.qq.com/s/DMj4wY2Z30MylAt9QJ5pUg)
 
 主要用来做线程变量的隔离。
 
@@ -70,260 +434,7 @@ sleep()是使线程暂停执行一段时间的方法。wait()也是一种使线�
 
 
 
-##### BlockingQueue的原理与实现
 
-**阻塞队列 (BlockingQueue)**是Java util.concurrent包下重要的数据结构，BlockingQueue提供了线程安全的队列访问方式：当阻塞队列进行插入数据时，如果队列已满，线程将会阻塞等待直到队列非满；从阻塞队列取数据时，如果队列已空，线程将会阻塞等待直到队列非空。并发包下很多高级同步类的实现都是基于BlockingQueue实现的。
-
-*BlockingQueue 的操作方法*
-BlockingQueue 具有 4 组不同的方法用于插入、移除以及对队列中的元素进行检查。如果请求的操作不能得到立即执行的话，每个方法的表现也不同。这些方法如下：
-
-![](https://gitee.com/sun-qiao321/picture/raw/master/images/clip_image001-1618908783219.png)
-
-**四组不同的行为方式解释：**
-• 抛异常：如果试图的操作无法立即执行，抛一个异常。
-• 特定值：如果试图的操作无法立即执行，返回一个特定的值(常常是 true / false)。
-• 阻塞：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行。
-• 超时：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行，但等待时间不会超过给定值。返回一个特定值以告知该操作是否成功(典型的是true / false)。
-无法向一个 BlockingQueue 中插入 null。如果你试图插入 null，BlockingQueue 将会抛出一个 NullPointerException。
-可以访问到 BlockingQueue 中的所有元素，而不仅仅是开始和结束的元素。比如说，你将一个对象放入队列之中以等待处理，但你的应用想要将其取消掉。那么你可以调用诸如 remove(o) 方法来将队列之中的特定对象进行移除。但是这么干效率并不高(译者注：基于队列的数据结构，获取除开始或结束位置的其他对象的效率不会太高)，因此你尽量不要用这一类的方法，除非你确实不得不那么做。
-**BlockingQueue 的实现类**
-BlockingQueue 是个接口，你需要使用它的实现之一来使用BlockingQueue，Java.util.concurrent包下具有以下 BlockingQueue 接口的实现类：
-• **ArrayBlockingQueue**：ArrayBlockingQueue 是一个有界的阻塞队列，其内部实现是将对象放到一个数组里。有界也就意味着，它不能够存储无限多数量的元素。它有一个同一时间能够存储元素数量的上限。你可以在对其初始化的时候设定这个上限，但之后就无法对这个上限进行修改了(译者注：因为它是基于数组实现的，也就具有数组的特性：一旦初始化，大小就无法修改)。
-• **DelayQueue**：DelayQueue 对元素进行持有直到一个特定的延迟到期。注入其中的元素必须实现 java.util.concurrent.Delayed 接口。
-• **LinkedBlockingQueue**：LinkedBlockingQueue 内部以一个链式结构(链接节点)对其元素进行存储。如果需要的话，这一链式结构可以选择一个上限。如果没有定义上限，将使用 Integer.MAX_VALUE 作为上限。
-• **PriorityBlockingQueue**：PriorityBlockingQueue 是一个无界的并发队列。它使用了和类 java.util.PriorityQueue 一样的排序规则。你无法向这个队列中插入 null 值。所有插入到 PriorityBlockingQueue 的元素必须实现 java.lang.Comparable 接口。因此该队列中元素的排序就取决于你自己的 Comparable 实现。
-• **SynchronousQueue**：SynchronousQueue 是一个特殊的队列，它的内部同时只能够容纳单个元素。如果该队列已有一元素的话，试图向队列中插入一个新元素的线程将会阻塞，直到另一个线程将该元素从队列中抽走。同样，如果该队列为空，试图向队列中抽取一个元素的线程将会阻塞，直到另一个线程向队列中插入了一条新的元素。据此，把这个类称作一个队列显然是夸大其词了。它更多像是一个汇合点。
-使用例子：
-阻塞队列的最长使用的例子就是生产者消费者模式,也是各种实现生产者消费者模式方式中首选的方式。使用者不用关心什么阻塞生产，什么时候阻塞消费，使用非常方便，代码如下：
-
-```java
-package MyThread; 
-import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit; 
-
-public class BlockingQueueTest {
-	  //生产者
-    public static class Producer implements Runnable{
-    private final BlockingQueue<Integer> blockingQueue;
-    private volatile boolean flag;
-    private Random random; 
-    public Producer(BlockingQueue<Integer> blockingQueue) {
-        this.blockingQueue = blockingQueue;
-        flag=false;
-        random=new Random();	 
-    }
-        
-    public void run() {
-       while(!flag){
-           int info=random.nextInt(100);
-           try {
-	          blockingQueue.put(info);
-	          System.out.println(Thread.currentThread().getName()+" produce "+info);
-	          Thread.sleep(50);
-	        } catch (InterruptedException e) {
-	          // TODO Auto-generated catch block
-	          e.printStackTrace();
-	        }        
-	   }
-     }
-        
-	 public void shutDown(){
-	      flag=true;
-	    }
-     }
-	  //消费者
-    public static class Consumer implements Runnable{
-	    private final BlockingQueue<Integer> blockingQueue;
-	    private volatile boolean flag;
-	    public Consumer(BlockingQueue<Integer> blockingQueue) {
-	      this.blockingQueue = blockingQueue;
-	    }
-    public void run() {
-	      while(!flag){
-47	        int info;
-48	        try {
-49	          info = blockingQueue.take();
-50	          System.out.println(Thread.currentThread().getName()+" consumer "+info);
-51	          Thread.sleep(50);
-52	        } catch (InterruptedException e) {
-53	          // TODO Auto-generated catch block
-54	          e.printStackTrace();
-55	        }        
-56	      }
-57	    }
-58	    public void shutDown(){
-59	      flag=true;
-60	    }
-61	  }
-62	  public static void main(String[] args){
-63	    BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<Integer>(10);
-64	    Producer producer=new Producer(blockingQueue);
-65	    Consumer consumer=new Consumer(blockingQueue);
-66	    //创建5个生产者，5个消费者
-67	    for(int i=0;i<10;i++){
-68	      if(i<5){
-69	        new Thread(producer,"producer"+i).start();
-70	      }else{
-71	        new Thread(consumer,"consumer"+(i-5)).start();
-72	      }
-73	    }
-74	 
-75	    try {
-76	      Thread.sleep(1000);
-77	    } catch (InterruptedException e) {
-78	      // TODO Auto-generated catch block
-79	      e.printStackTrace();
-80	    }
-81	    producer.shutDown();
-82	    consumer.shutDown();
-83	 
-84	  }
-85	}
-```
-
-**阻塞队列原理：**
-其实阻塞队列实现阻塞同步的方式很简单，使用的就是是lock锁的多条件（condition）阻塞控制。使用BlockingQueue封装了根据条件阻塞线程的过程，而我们就不用关心繁琐的await/signal操作了。
-下面是Jdk 1.7中ArrayBlockingQueue部分代码：
-
-```java
-1	public ArrayBlockingQueue(int capacity, boolean fair) {
-2	 
-3	    if (capacity <= 0)
-4	      throw new IllegalArgumentException();
-5	    //创建数组  
-6	    this.items = new Object[capacity];
-7	    //创建锁和阻塞条件
-8	    lock = new ReentrantLock(fair);  
-9	    notEmpty = lock.newCondition();
-10	    notFull = lock.newCondition();
-11	  }
-12	//添加元素的方法
-13	public void put(E e) throws InterruptedException {
-14	    checkNotNull(e);
-15	    final ReentrantLock lock = this.lock;
-16	    lock.lockInterruptibly();
-17	    try {
-18	      while (count == items.length)
-19	        notFull.await();
-20	      //如果队列不满就入队
-21	      enqueue(e);
-22	    } finally {
-23	      lock.unlock();
-24	    }
-25	  }
-26	 //入队的方法
-27	 private void enqueue(E x) {
-28	    final Object[] items = this.items;
-29	    items[putIndex] = x;
-30	    if (++putIndex == items.length)
-31	      putIndex = 0;
-32	    count++;
-33	    notEmpty.signal();
-34	  }
-35	 //移除元素的方法
-36	 public E take() throws InterruptedException {
-37	    final ReentrantLock lock = this.lock;
-38	    lock.lockInterruptibly();
-39	    try {
-40	      while (count == 0)
-41	        notEmpty.await();
-42	      return dequeue();
-43	    } finally {
-44	      lock.unlock();
-45	    }
-46	  }
-47	 //出队的方法
-48	 private E dequeue() {
-49	    final Object[] items = this.items;
-50	    @SuppressWarnings("unchecked")
-51	    E x = (E) items[takeIndex];
-52	    items[takeIndex] = null;
-53	    if (++takeIndex == items.length)
-54	      takeIndex = 0;
-55	    count--;
-56	    if (itrs != null)
-57	      itrs.elementDequeued();
-58	    notFull.signal();
-59	    return x;
-60  }
-```
-
-双端阻塞队列（BlockingDeque）
-concurrent包下还提供双端阻塞队列（BlockingDeque），和BlockingQueue是类似的，只不过BlockingDeque提供从任意一端插入或者抽取元素的队列。
-
-
-
-##### 实现A和B交替输出
-
-```java
-public class Signal {
-    private static volatile int signal = 0;
-    static class ThreadA implements Runnable{
-        @Override
-        public void run() {
-            while(signal <10){
-                if(signal % 2 == 0) {
-                    System.out.println("threadA: " +signal);
-                    signal++;
-                }
-            }
-        }
-    }
-    static class ThreadB implements Runnable {
-        @Override
-        public void run() {
-            while (signal < 10) {
-                if (signal % 2 == 1) {
-                    System.out.println("threadB: " + signal);
-                    signal = signal + 1;
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        new Thread(new ThreadA()).start();
-        Thread.sleep(1000);
-        new Thread(new ThreadB()).start();
-    }
-}
-```
-
-##### 实现A先输出 、B再输出
-
-```java
-public class ObjectLock {
-    private static Object lock = new Object();
-    static class ThreadA implements Runnable{
-        @Override
-        public void run() {
-            synchronized (lock){
-                for(int i = 0;i<100;i++){
-                    System.out.println("Thread A "+i);
-                }
-            }
-        }
-    }
-    static class ThreadB implements Runnable {
-        @Override
-        public void run() {
-            synchronized (lock) {
-                for (int i = 0; i < 100; i++) {
-                    System.out.println("Thread B " + i);
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        new Thread(new ThreadA()).start();
-        new Thread(new ThreadB()).start();
-    }
-}
-
-```
 
 
 
