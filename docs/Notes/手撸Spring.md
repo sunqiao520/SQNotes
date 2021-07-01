@@ -377,3 +377,11 @@ Process finished with exit code 0
 - BeanDefinitionRegistry：定义registerBeanDefinition ，以键值对的形式注册对象到容器中
 - SingletonBeanRegistry：获得单例对象
 
+## 3、基于Cglib实现含构造函数的类实例化策略
+
+注意上一节实现的实例化只有无参的构造方法，传入参数时会出错。
+
+![](https://gitee.com/sun-qiao321/picture/raw/master/images/20210622090532.png)
+
+考虑两部分，一是以什么方式将构造函数的入参信息传递到实例化操作；二是怎么实例化含有参数的实例对象。
+
