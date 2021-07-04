@@ -394,7 +394,7 @@ slow_query_log_file = slow.log
 ![](https://gitee.com/sun-qiao321/picture/raw/master/images/20210617165310.png)
 
 - `Connectors`：指的是不同语言中与SQL的交互。
-- `Connection Pool`：管理缓冲用户连接，线程处理等需要缓存的需求。**MySQL数据库的连接层。**
+- `Connection Pool`：连接池组件。管理缓冲用户连接，线程处理等需要缓存的需求。**MySQL数据库的连接层。**
 - `Management Serveices & Utilities`：系统管理和控制工具。备份、安全、复制、集群等等。。
 - `SQL Interface`：接受用户的SQL命令，并且返回用户需要查询的结果。
 - `Parser`：SQL语句解析器。

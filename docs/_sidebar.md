@@ -32,10 +32,11 @@
   - [SpringBoot自动装配](Notes/SpringBoot自动装配.md)
   - [MyBatis](Notes/MyBatis.md)
   - [MyBatis-Plus](Notes/MyBatis-Plus.md)
-  - [Mybatis-Plus逻辑删除](Notes/MybatisPlus 逻辑删除)
-  - [Mybatis-Plus自动填充时间](Notes/Mybatis-plus 自动填充时间)
+  - [Mybatis-Plus逻辑删除](Notes/MybatisPlus逻辑删除)
+  - [Mybatis-Plus自动填充时间](Notes/Mybatis-plus自动填充时间)
   - [Spring Data JPA](Notes/SpringDataJPA.md)
   - [SpringSecurity](Notes/SpringSecurity)
+  - [微服务整合SpringSecurity进行权限验证](Notes/微服务整合SpringSecurity进行权限验证)
   - [Shiro](Notes/Shiro.md)
   - [SpringCloud](Notes/SpringCloud)
   - [SpringBoot登录拦截器](Notes/SpringBoot登录拦截器)
@@ -61,8 +62,9 @@
 
   - [Swagger使用教程](Notes/Swagger使用教程)
   - [SpringBoot整合阿里云OSS实现图片上传](Notes/SpringBoot整合阿里云OSS实现图片上传)
+  - [SpringBoot整合阿里云视频点播](Notes/SpringBoot整合阿里云视频点播)
+  - [SpringBoot整合短信服务](Notes/SpringBoot整合短信服务)
   - [EasyExcel读写](Notes/EasyExcel读写)
-
   - [使用Github 或者 Gitee 用作云笔记存储](Notes/Github使用.md)
   - [使用Github 或者 Gitee作为图床工具](Notes/Github使用.md)
 

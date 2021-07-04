@@ -1,4 +1,4 @@
-### IO流
+## IO流
 
 java中的IO流分为几种？
 
@@ -16,7 +16,7 @@ InputStream/Reader: 所有的输入流的基类，前者是字节输入流，后
 
 OutputStream/Writer: 所有输出流的基类，前者是字节输出流，后者是字符输出流。
 
-#### 字符流与字节流的区别：
+### 字符流与字节流的区别：
 
 - 字节流操作的基本单位为单个字节；字符流操作的基本单位为Unicode码元（大小2字节）
 - 字节流默认不使用缓冲区；字符流使用缓冲区
@@ -30,9 +30,9 @@ OutputStream/Writer: 所有输出流的基类，前者是字节输出流，后�
 
 <img src="https://gitee.com/sun-qiao321/picture/raw/master/images/clip_image001-1618907878319.jpg" style="zoom: 80%;" />
 
-##### Java中3中常见IO模型
+### Java中3中常见IO模型
 
-###### BIO（Blocking I/O）
+#### BIO（Blocking I/O）
 
 BIO属于同步阻塞模型，应用程序发起read调用后，会一直阻塞，直到内核把数据拷贝到用户空间。
 
@@ -40,7 +40,7 @@ BIO属于同步阻塞模型，应用程序发起read调用后，会一直阻塞�
 
 在客户端连接数量不高的情况下，是没问题的。但是，当面对十万甚至百万级连接的时候，传统的 BIO 模型是无能为力的。因此，我们需要一种更高效的 I/O 处理模型来应对更高的并发量。
 
-###### NIO（Non-blocking/New I/O）
+#### NIO（Non-blocking/New I/O）
 
 Java 中的 NIO 于 Java 1.4 中引入，对应 `java.nio` 包，提供了 `Channel` , `Selector`，`Buffer` 等抽象。NIO 中的 N 可以理解为 Non-blocking，不单纯是 New。它支持面向缓冲的，基于通道的 I/O 操作方法。 对于高负载、高并发的（网络）应用，应使用 NIO 。
 
@@ -67,7 +67,7 @@ IO 多路复用模型中，线程首先发起 select 调用，询问内核数据
 
 Java 中的 NIO ，有一个非常重要的**选择器 ( Selector )** 的概念，也可以被称为 **多路复用器**。通过它，只需要一个线程便可以管理多个客户端连接。当客户端数据到了之后，才会为其服务。
 
-###### AIO（Asynchronous I/O）
+#### AIO（Asynchronous I/O）
 
 异步I/O模型
 
