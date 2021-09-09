@@ -292,7 +292,7 @@ hashCode() 的作用是获取哈希码，也称为散列码；它实际上是返
 
 ##### Comparable 与 Comparator的区别
 
-Comparable是排序接口。若一个类实现； Comparable接口，就意味着该类支持排序。实现了Comparable接口的类的对象列表或数组可以通过Collections.sort或Arrays.sort进行自动排序。
+Comparable是排序接口。若一个类实现Comparable接口，就意味着该类支持排序。实现了Comparable接口的类的对象列表或数组可以通过Collections.sort或Arrays.sort进行自动排序。
 
 ```Java
 package java.lang;
